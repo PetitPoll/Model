@@ -1,0 +1,105 @@
+model{
+  for (i in 1:n){
+    for( t in 1:T){
+      # probability of voting for a major party candidate 
+      mp.it[i,t] ~ dbern(p.mp[i,t])
+      logit(p.mp[i,t]) <- alpha0.t[t] + a.sex.t[sex.i[i,t],t] +
+        a.age.t[age.i[i,t],t] + a.educ.t[educ.i[i,t],t] 
+    }
+  }
+  
+  for(t in 1:T){
+    alpha0.t[t] ~ dnorm(alpha0, tau.alpha)
+    for (s in 1:n.sex){
+      a.sex.t[s,t] ~ dnorm(a.sex[s], tau.sex.s[s])
+    }
+    for (a in 1:n.age){
+      a.age.t[a,t] ~ dnorm(a.age[a], tau.age.a[a])
+    }
+    for (e in 1:n.educ){
+      a.educ.t[e,t] ~ dnorm(a.educ[e], tau.educ.e[e])
+    }
+  }
+  
+  alpha0 ~ dnorm(0,0.01)
+  
+  for (s in 1:n.sex){
+    a.sex[s] ~ dnorm(0, tau.sex)
+    tau.sex.s[s] ~ dchisq(nu.sex.s[s])
+    nu.sex.s[s] ~ dunif(0,100)
+  }
+  for (a in 1:n.age){
+    a.age[a] ~ dnorm(0, tau.age)
+    tau.age.a[a] ~ dchisq(nu.age.a[a])
+    nu.age.a[a] ~ dunif(0,100)
+  }
+  for (e in 1:n.educ){
+    a.educ[e] ~ dnorm(0, tau.educ)
+    tau.educ.e[e] ~ dchisq(nu.educ.e[e])
+    nu.educ.e[e] ~ dunif(0,100)
+  }
+  
+  tau.alpha ~ dchisq(nu.alpha)
+  nu.alpha ~ dunif(0,100)
+  tau.sex ~ dchisq(nu.sex)
+  nu.sex ~ dunif(0,100)
+  tau.age ~ dchisq(nu.age)
+  nu.age ~ dunif(0,100)
+  tau.educ ~ dchisq(nu.educ)
+  nu.educ ~ dunif(0,100)
+  
+  
+  
+  ######################
+  for(j in 1:m){
+    for(t in 1:T){
+      # probability of voting lnp, given having voted for a major party candidate
+      y.jt[j,t] ~ dbern(p[j,t])
+      logit(p[j,t]) <- beta0.t[t] + b.sex.t[sex.j[j,t],t] +
+        b.age.t[age.j[j,t],t] + b.educ.t[educ.j[j,t],t] 
+    }
+    
+  }
+  
+  for(t in 1:T){
+    beta0.t[t] ~ dnorm(beta0, tau.beta)
+    for (s in 1:n.sex){
+      b.sex.t[s,t] ~ dnorm(b.sex[s], tau.sex.m.s[s])
+    }
+    for (a in 1:n.age){
+      b.age.t[a,t] ~ dnorm(b.age[a], tau.age.m.a[a])
+    }
+    for (e in 1:n.educ){
+      b.educ.t[e,t] ~ dnorm(b.educ[e], tau.educ.m.e[e])
+    }
+  }
+  
+  beta0 ~ dnorm(0,0.01)
+  
+  for (s in 1:n.sex){
+    b.sex[s] ~ dnorm(0, tau.sex.m)
+    tau.sex.m.s[s] ~ dchisq(nu.sex.m.s[s])
+    nu.sex.m.s[s] ~ dunif(0,100)
+  }
+  for (a in 1:n.age){
+    b.age[a] ~ dnorm(0, tau.age.m)
+    tau.age.m.a[a] ~ dchisq(nu.age.m.a[a])
+    nu.age.m.a[a] ~ dunif(0,100)
+  }
+  for (e in 1:n.educ){
+    b.educ[e] ~ dnorm(0, tau.educ.m)
+    tau.educ.m.e[e] ~ dchisq(nu.educ.m.e[e])
+    nu.educ.m.e[e] ~ dunif(0,100)
+  }
+  
+  tau.beta ~ dchisq(nu.beta)
+  nu.beta ~ dunif(0,100)
+  tau.sex.m ~ dchisq(nu.sex.m)
+  nu.sex.m ~ dunif(0,100)
+  tau.age.m ~ dchisq(nu.age.m)
+  nu.age.m ~ dunif(0,100)
+  tau.educ.m ~ dchisq(nu.educ.m)
+  nu.educ.m ~ dunif(0,100)
+  
+  
+}

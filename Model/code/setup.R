@@ -1,0 +1,6 @@
+library(rjags)
+library(R2jags)
+library(arm)
+library(abind)
+functions.list <- paste0(c("Model/code/functions/"), list.files(paste0(getwd(),"/Model/code/functions/")))
+sapply(functions.list, source)
